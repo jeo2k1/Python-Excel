@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 NOTAS_ALUMNOS_PATH = r'inputs/Notas_Alumnos.xlsx'
 
@@ -50,6 +51,9 @@ def deteccionErrores(df):
      if (err1 == True) or (err2 == True) or (err3 == True):
          print('')
          print('Debes corregir los errores para continuar la ejecucion')
+         sys.exit(1)
+     else:
+        print('Ningun error detectado')
 
 
 

@@ -11,6 +11,10 @@ PLANTILLA_CURSO_PATH = r'inputs/Plantilla_notas.docx'
 # Ruta Salidas
 PATH_OUTPUT = r'.\outputs'
 
+CURSO = "2021/2022"
+
+
+
 print(NOTAS_ALUMNOS_PATH)
 
 dict_asig = {
@@ -65,25 +69,34 @@ def deteccionerrores(df):
     else:
         print('Ningun error detectado')
 
+def eliminarTildes (texto):
+    tildes_dict ={
+        'Á': 'A',
+        'É': 'E',
+        'Í': 'I',
+        'Ó': 'O',
+        'Ú': 'U',
+    }
+    textoSinTilde = texto
+
+    for key in tildes_dict:
+        textoSinTilde = textoSinTilde.replace(key,tildes_dict[key])
+
+    return textoSinTilde
+
 
 def main():
 #### Documento Word
     docs_tpl = DocxTemplate(PLANTILLA_CURSO_PATH)
 
-# Contexto, son las variables definidas en el archivo Word
-    context = {
-        'curso': '2021/2022',
-        'nombre_alumno': 'Jorge Orellana',
-        'clase': '5to-2da'
-    }
-# Renderizacion de documento
-    docs_tpl.render(context)
 
-# Guardamos el documento y definimos el nombre
-    docs_tpl.save(PATH_OUTPUT + r'\fichero_word.docx')
+
 
 #### Planilla Excel
+    ####### Leemos excel hoja notas y datos alumnos
     excel_df = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Notas')
+    datos_alumnos = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Datos_Alumnos')
+
     for index, row in excel_df.iterrows():
         print(index, row['NOMBRE'])
 
@@ -96,9 +109,31 @@ def main():
         filter_td_asig.append(valor_td)  # rellena la lista vacia con cada item del diccionario
     print('')
 
-# Llama a la funcion deteccionErrores()
+    # Llama a la funcion deteccionErrores()
     deteccionerrores(excel_df)
 
+
+    nombre_alumno_list = sorted(list(datos_alumnos['NOMBRE']))
+#    nombre_alumno = nombre_alumno_list[0]
+    for nombre_alumno in nombre_alumno_list:
+        filt_datos_alumnos_df = datos_alumnos[(datos_alumnos['NOMBRE'] == nombre_alumno)]
+        CLASE = filt_datos_alumnos_df.iloc[0]['CLASE']
+        # Contexto, son las variables definidas en el archivo Word
+        context = {
+            'curso': CURSO,
+            'nombre_alumno': nombre_alumno,
+            'clase': CLASE
+        }
+        # Renderizacion de documento
+        docs_tpl.render(context)
+        titulo = 'NOTAS_' +nombre_alumno
+        titulo = titulo.upper()
+        titulo = eliminarTildes(titulo)
+        titulo = titulo.replace(" ", "_")
+
+        titulo += '.docx'
+        # Guardamos el documento y definimos el nombre
+        docs_tpl.save(PATH_OUTPUT + r'\fichero_word.docx')
 
 if __name__ == '__main__':
     main()

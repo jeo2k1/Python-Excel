@@ -1,6 +1,8 @@
 import pandas as pd
 import sys
 from docxtpl import DocxTemplate
+import shutil
+import os
 
 # Ruta Plantilla Excel
 NOTAS_ALUMNOS_PATH = r'inputs/Notas_Alumnos.xlsx'
@@ -84,37 +86,23 @@ def eliminarTildes (texto):
 
     return textoSinTilde
 
+def eliminarCrearcarpetas(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
 
-def main():
-#### Documento Word
-    docs_tpl = DocxTemplate(PLANTILLA_CURSO_PATH)
+    os.mkdir(path)
 
-
-
-
-#### Planilla Excel
-    ####### Leemos excel hoja notas y datos alumnos
-    excel_df = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Notas')
-    datos_alumnos = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Datos_Alumnos')
-
-    for index, row in excel_df.iterrows():
-        print(index, row['NOMBRE'])
-
+def crearWordAsignarTag(datos_alumnos, excel_df):
     asig_list = sorted(list(excel_df['ASIGNATURA'].drop_duplicates()))
-    # print(asig_list)
-
     filter_td_asig = []  # lista vacia
     for item in asig_list:
         valor_td = dict_asig[item]
         filter_td_asig.append(valor_td)  # rellena la lista vacia con cada item del diccionario
     print('')
-
-    # Llama a la funcion deteccionErrores()
-    deteccionerrores(excel_df)
-
-
+    #### Documento Word
+    docs_tpl = DocxTemplate(PLANTILLA_CURSO_PATH)
     nombre_alumno_list = sorted(list(datos_alumnos['NOMBRE']))
-#    nombre_alumno = nombre_alumno_list[0]
+    #  nombre_alumno = nombre_alumno_list[0]
     for nombre_alumno in nombre_alumno_list:
         filt_datos_alumnos_df = datos_alumnos[(datos_alumnos['NOMBRE'] == nombre_alumno)]
         CLASE = filt_datos_alumnos_df.iloc[0]['CLASE']
@@ -126,14 +114,36 @@ def main():
         }
         # Renderizacion de documento
         docs_tpl.render(context)
-        titulo = 'NOTAS_' +nombre_alumno
+        titulo = 'NOTAS_' + nombre_alumno
         titulo = titulo.upper()
         titulo = eliminarTildes(titulo)
         titulo = titulo.replace(" ", "_")
-
         titulo += '.docx'
+
         # Guardamos el documento y definimos el nombre
-        docs_tpl.save(PATH_OUTPUT + r'\fichero_word.docx')
+        docs_tpl.save(PATH_OUTPUT + '\\' + titulo)
+
+
+def main():
+
+    eliminarCrearcarpetas(PATH_OUTPUT)
+
+
+#### Planilla Excel
+    ####### Leemos excel hoja notas y datos alumnos
+    excel_df = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Notas')
+    datos_alumnos = pd.read_excel(NOTAS_ALUMNOS_PATH, sheet_name='Datos_Alumnos')
+
+#    for index, row in excel_df.iterrows():
+#        print(index, row['NOMBRE'])
+
+
+    deteccionerrores(excel_df)
+
+
+    crearWordAsignarTag(datos_alumnos,excel_df)
+
+
 
 if __name__ == '__main__':
     main()

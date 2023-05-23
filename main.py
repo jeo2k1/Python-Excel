@@ -97,7 +97,7 @@ def crearWordAsignarTag(datos_alumnos, excel_df):
     filter_td_asig = []  # lista vacia
     for item in asig_list:
         valor_td = dict_asig[item]
-        filter_td_asig.append(valor_td)  # rellena la lista vacia con cada item del diccionario
+        filter_td_asig.append(valor_td.upper())  # rellena la lista vacia con cada item del diccionario
     print('')
     #### Documento Word
     docs_tpl = DocxTemplate(PLANTILLA_CURSO_PATH)
@@ -106,6 +106,16 @@ def crearWordAsignarTag(datos_alumnos, excel_df):
     for nombre_alumno in nombre_alumno_list:
         filt_datos_alumnos_df = datos_alumnos[(datos_alumnos['NOMBRE'] == nombre_alumno)]
         CLASE = filt_datos_alumnos_df.iloc[0]['CLASE']
+
+        #Crear tabla de notas
+        asignatura_list = []
+
+        #Iterar sobre los items de asignatura
+        for asig_idx in range(len(asig_list)):
+            asign = asig_list[asig_idx]
+            filt_al_as_excel_df = excel_df[(excel_df['NOMBRE'] == nombre_alumno) & (excel_df['ASIGNATURA'] == asign)]
+            print('')
+
         # Contexto, son las variables definidas en el archivo Word
         context = {
             'curso': CURSO,

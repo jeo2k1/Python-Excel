@@ -116,11 +116,21 @@ def crearWordAsignarTag(datos_alumnos, excel_df):
             filt_al_as_excel_df = excel_df[(excel_df['NOMBRE'] == nombre_alumno) & (excel_df['ASIGNATURA'] == asign)]
             print('')
 
+
+            asignatura_dic = {
+                'nombre_asignatura': filter_td_asig[asig_idx],
+                't1': round(filt_al_as_excel_df.iloc[0]['NOTA T1'],1),
+                't2': round(filt_al_as_excel_df.iloc[0]['NOTA T2'],1),
+                't3': round(filt_al_as_excel_df.iloc[0]['NOTA T3'],1),
+            }
+            asignatura_list.append(asignatura_dic)
+
         # Contexto, son las variables definidas en el archivo Word
         context = {
             'curso': CURSO,
             'nombre_alumno': nombre_alumno,
-            'clase': CLASE
+            'clase': CLASE,
+            'asignatura_list': asignatura_list,
         }
         # Renderizacion de documento
         docs_tpl.render(context)

@@ -1,4 +1,7 @@
-from pathlib import Path
+import pandas as pd
+
+# from pathlib import Path
+# import zipfile
 
 # Renombrar nombre de carpeta
 #path = Path('test')
@@ -29,7 +32,7 @@ from pathlib import Path
 #          print('No hay archivo')
 
 
-folder = Path('extensiones')
+# folder = Path('extensiones')
 
 # Pasar de txt a csv
 # for path in list(folder.iterdir()):
@@ -39,7 +42,38 @@ folder = Path('extensiones')
 #         path.rename(nuevoNombreExtension)
 
 # Pasar de csv a txt
-for path in folder.glob('**/*.csv'):
-    print(path)
-    nuevoNombreExtension = path.with_suffix('.txt')
-    path.rename((nuevoNombreExtension))
+# for path in folder.glob('**/*.csv'):
+#     print(path)
+#     nuevoNombreExtension = path.with_suffix('.txt')
+#     path.rename((nuevoNombreExtensinumeros
+
+# numeros = [1,2,3,4,5,6,7,8,9]
+
+# crear archivos txt
+# for i in numeros:
+#     with open(f'test{i}.txt', 'w') as file:
+#         file.write('Hola Mundo')
+
+
+# # Eliminar todos los archivos txt
+# for path in Path('.').glob('*.txt'):
+#     print(path)
+#     path.unlink()
+
+
+# Eliminar todos los archivos txt menos el test 9
+# for path in Path('.').glob('test[1-8].txt'):
+#     print(path)
+#     path.unlink()
+
+# Crea una carpeta temp y extrae un archivo .zip en esa carpeta
+# directorio_actual = Path('.')
+# directorio_objetivo = Path('temp')
+#
+# for path in directorio_actual.glob('*.zip'):
+#     print(path)
+#     with zipfile.ZipFile(path, 'r') as zipObj:
+#         zipObj.extractall(path=directorio_objetivo)
+
+# simp = pd.read_html('https://en.wikipedia.org/wiki/List_of_The_Simpsons_episodes_(seasons_1%E2%80%9320)')
+# print(simp[4])

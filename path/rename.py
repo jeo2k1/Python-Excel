@@ -1,5 +1,8 @@
 import pandas as pd
 
+import openpyxl
+
+
 # from pathlib import Path
 # import zipfile
 
@@ -77,3 +80,10 @@ import pandas as pd
 
 # simp = pd.read_html('https://en.wikipedia.org/wiki/List_of_The_Simpsons_episodes_(seasons_1%E2%80%9320)')
 # print(simp[4])
+
+
+archivo_excel = pd.read_excel('./excel/supermarket_sales.xlsx')
+# print(archivo_excel[['Gender', 'Product line', 'Total']])
+
+table_pivote = pd.pivot_table(index='Gender', columns='Product line', values='Total', aggfunc='sum').round(0)
+print(table_pivote)
